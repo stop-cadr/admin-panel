@@ -31,16 +31,14 @@ export const Content = () => {
         </section>
         <div className="mt-8">
           <hr className="border-t border-gray-300" />
-          <div className="flex gap-8 p-2 w-full">
-          <div className=" flex gap-6 items-center h-full ">
+          <div className="flex gap-5 p-2 w-full">
+          <div className=" flex gap-6 items-center h-full px-5">
             <p>Сортировать</p>
             <div className="flex items-center justify-around border rounded-md p-2">
               <p>По дате добавления заявки</p>
               <img src="./image/Polygon 5.png" alt="arrow" />
             </div>
             </div>
-
-            
             <div className="flex items-center w-[60%]">
               <input type="text" className="border p-2 rounded-s-lg w-[80%]" placeholder="Поиск по номеру задания/номеру телефона клиента" />
               <button className="bg-customBlue text-white p-2 rounded-e-lg w-[20%]">Найти</button>
@@ -48,6 +46,16 @@ export const Content = () => {
             </div>
             <hr className="border-t border-gray-300" />
         </div>
+
+        <div className="flex items-center justify-between p-4">
+  <div className="flex gap-3">
+    <input type="checkbox" />
+    <p className="opacity-35">Выбрать все заказы</p>
+  </div>
+  <button className="ml-auto text-customBlue">Удалить</button>
+</div>
+
+        
       </div>
     );
   };
