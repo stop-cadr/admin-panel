@@ -47,7 +47,7 @@ export const Content = () => {
               />
             </div>
           </div>
-          <div className="flex items-center w-[60%]">
+          <div className="flex items-center flex-1">
             <input
               type="text"
               className="border p-2 rounded-s-lg w-[80%]"
