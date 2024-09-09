@@ -1,17 +1,19 @@
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 export const PersonalOff = () => {
   const [isActive, setIsActive] = useState(false);
   const togglePassword = () => setIsActive((prev) => !prev);
 
-  const hiddenFileInput = useRef(null);
+  const hiddenFileInput = useRef<HTMLInputElement | null>(null);
 
-  const handleClick = (event) => {
-    hiddenFileInput.current.click();
+  const handleClick = () => {
+    if (hiddenFileInput.current) {
+      hiddenFileInput.current.click();
+    }
   };
 
-  const handleChange = (event) => {
-    const fileUploaded = event.target.files[0];
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const fileUploaded = event.target.files?.[0];
     if (fileUploaded) {
       console.log(`выбран файл: ${fileUploaded.name}`);
     }
@@ -72,26 +74,27 @@ export const PersonalOff = () => {
           <div className="flex flex-col gap-6">
             <p>Пароль</p>
             <div className="flex flex-col items-center relative max-w-[465px]">
-              <button className="pl-[12px] border border-gray-300 rounded-md w-full max-w-[465px] h-10 text-left font-light">
+              <button
+                onClick={togglePassword}
+                className="pl-[12px] border border-gray-300 rounded-md w-full max-w-[465px] h-10 text-left font-light"
+              >
                 Сменить пароль
               </button>
 
               <img
-                onClick={togglePassword}
                 src="./image/Polygon 5.png"
-                alt={isActive ? "Close" : "Open"}
                 className=" absolute cursor-pointer top-4 right-[14px]"
               />
               {isActive && (
                 <div className="flex flex-col gap-5 pt-5">
                   <input
-                    type="text"
+                    type="password"
                     placeholder="Старый пароль"
                     className=" border border-gray-300 rounded-md p-3 w-[465px] h-10"
                   />
 
                   <input
-                    type="text"
+                    type="password"
                     placeholder="Новый пароль"
                     className=" border border-gray-300 rounded-md p-3 w-[465px] h-10"
                   />
