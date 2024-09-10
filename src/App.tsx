@@ -1,6 +1,5 @@
-// App.jsx
 import { Routes, Route } from "react-router-dom";
-import { MainLayout } from "@/components";
+import { MainLayout, Content, SignInForm, LogIn } from "@/components";
 import {
   PersonalOff,
   Orders,
@@ -9,14 +8,13 @@ import {
   DataBase,
   Employees,
   Notification,
-} from "@/components/pages";
-import { SignInForm } from "./components/signIN";
-import { Content } from "@/components";
+} from "@/pages";
 
 function App() {
   return (
     <Routes>
       <Route path="/x" element={<SignInForm />} />
+      <Route path="/LogIn" element={<LogIn />} />
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Content />} />
         <Route path="/PersonalOff" element={<PersonalOff />} />
