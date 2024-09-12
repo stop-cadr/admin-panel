@@ -4,18 +4,52 @@ interface Inputs {
   email: string;
   name: string;
   number: number;
-  password: number | string;
+  password: string;
+  confirmPassword: string;
 }
 
 export const LogIn = () => {
+  const fetchData = async (data: Inputs) => {
+    const res = await fetch("https://9303851354d5e8f0.mokky.dev/register", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      }),
+    });
+    const responceData = await res.json();
+
+    if (!res.ok) {
+      throw new Error(responceData.message || "что-то пошло не так");
+    }
+    localStorage.setItem("token", responceData.token);
+    console.log("Регистрация успешно прошла", responceData);
+  };
+
   const {
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors },
   } = useForm<Inputs>({ mode: "onBlur" });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
+
+  const password = watch("password");
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (data.password !== data.confirmPassword) {
+      return;
+    }
+    try {
+      await fetchData(data);
+    } catch (error) {
+      console.log(error);
+    }
     reset();
   };
 
@@ -71,22 +105,27 @@ export const LogIn = () => {
             type="password"
             placeholder="Пароль"
             {...register("password", {
-              required: true,
+              required: "Введите пароль!",
             })}
           />
           {errors?.password && (
-            <p className="text-red-600 text-[13px]">Введите пароль!</p>
+            <p className="text-red-600 text-[13px]">
+              {errors.password.message}
+            </p>
           )}
           <input
             className="border bg-[#1A1919] rounded-md h-12 p-2 opacity-30 text-white pl-3"
             type="password"
             placeholder="Пароль еще раз"
-            {...register("password", {
-              required: true,
+            {...register("confirmPassword", {
+              required: "Введите пароль еще раз!",
+              validate: (value) => value === password || "Пароли не совпадают",
             })}
           />
-          {errors?.password && (
-            <p className="text-red-600 text-[13px]">Введите пароль!</p>
+          {errors.confirmPassword && (
+            <p className="text-red-600 text-[13px]">
+              {errors.confirmPassword.message}
+            </p>
           )}
           <button className="bg-amber-400  h-12 rounded-md text-white cursor-pointer">
             Зарегистрироваться
