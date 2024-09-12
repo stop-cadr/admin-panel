@@ -1,5 +1,5 @@
 export * from './content'
 export * from './sidebar'
-export * from './MainLayour'
+export * from './MainLayout'
 export * from './signin/index'
 export * from './login/index'
