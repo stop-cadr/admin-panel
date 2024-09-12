@@ -7,7 +7,7 @@ interface Inputs {
 
 export const SignInForm = () => {
   const fetchData = async (data: Inputs) => {
-    const res = await fetch("https://9303851354d5e8f0.mokky.dev/auth", {
+    const res = await fetch("https://b846882921d4f43c.mokky.dev/auth", {
       method: "POST",
       headers: {
         Accept: "application/json",
