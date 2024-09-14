@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { MainLayout, Content, SignInForm, LogIn } from "@/components";
+import { MainLayout, Content } from "@/components";
 import {
   PersonalOff,
   Orders,
@@ -8,22 +8,24 @@ import {
   DataBase,
   Employees,
   Notification,
+  SignIn,
+  SignUp,
 } from "@/pages";
 
 function App() {
   return (
     <Routes>
-      <Route path="/x" element={<SignInForm />} />
-      <Route path="/LogIn" element={<LogIn />} />
+      <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/sign-up" element={<SignUp />} />
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Content />} />
-        <Route path="/PersonalOff" element={<PersonalOff />} />
-        <Route path="/Orders" element={<Orders />} />
-        <Route path="/Accounting" element={<Accounting />} />
-        <Route path="/Users" element={<Users />} />
-        <Route path="/DataBase" element={<DataBase />} />
-        <Route path="/Employees" element={<Employees />} />
-        <Route path="/Notification" element={<Notification />} />
+        <Route path="/personalOff" element={<PersonalOff />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/accounting" element={<Accounting />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/dataBase" element={<DataBase />} />
+        <Route path="/employees" element={<Employees />} />
+        <Route path="/notification" element={<Notification />} />
       </Route>
     </Routes>
   );
