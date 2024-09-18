@@ -1,6 +1,6 @@
-import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Response } from "@/pages";
+import { fetchRegisterData } from "@/services";
+import { useNavigate } from "react-router-dom";
 
 interface Inputs {
   email: string;
@@ -11,15 +11,7 @@ interface Inputs {
 }
 
 export const SignUp = () => {
-  const fetchData = async (data: Inputs) => {
-    await axios
-      .post<
-        Inputs,
-        Response
-      >("https://b846882921d4f43c.mokky.dev/register", data)
-      .then((data) => localStorage.setItem("token", data.token));
-  };
-
+  const navigate = useNavigate();
   const {
     handleSubmit,
     register,
@@ -35,8 +27,8 @@ export const SignUp = () => {
       return;
     }
     try {
-      await fetchData(data);
-      window.location.replace("/sign-in");
+      await fetchRegisterData(data);
+      navigate("/sign-in");
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +43,7 @@ export const SignUp = () => {
       >
         <div className="flex flex-col gap-6 w-[600px] p-3 h-full">
           <button
-            onClick={() => window.open("/sign-in")}
+            onClick={() => navigate("/sign-in")}
             className="flex justify-start text-white opacity-55"
           >
             Назад

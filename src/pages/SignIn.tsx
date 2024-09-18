@@ -1,40 +1,34 @@
-import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { fetchLoginData } from "@/services";
+import { Lock, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Inputs {
   email: string;
   password: string;
 }
 
-export interface Response {
-  token: string;
-}
-
 export const SignIn = () => {
-  const fetchData = async (data: Inputs) => {
-    await axios
-      .post<Response>("https://b846882921d4f43c.mokky.dev/auth", data)
-      .then((response) => localStorage.setItem("token", response.data.token));
-  };
-
+  const navigate = useNavigate();
   const {
     handleSubmit,
     register,
     reset,
+    setError,
     formState: { errors },
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    if (!data.password) {
-      console.error("Неверный пароль!");
+    const result = await fetchLoginData(data);
+    if (!result) {
+      setError("password", {
+        type: "manual",
+        message: "Неверный пароль или email",
+      });
+      return;
     }
-    try {
-      await fetchData(data);
 
-      window.location.href = "/";
-    } catch (error) {
-      console.error(error);
-    }
+    navigate("/");
     reset();
   };
 
@@ -44,7 +38,7 @@ export const SignIn = () => {
         <p className="text-white opacity-35">Войти</p>
         <button
           type="button"
-          onClick={() => window.open("/sign-up")}
+          onClick={() => navigate("/sign-up")}
           className="border rounded-md p-[4px] px-2 opacity-20 text-white"
         >
           Регистрация
@@ -65,21 +59,8 @@ export const SignIn = () => {
             <p className="text-red-600 text-sm">{errors.email.message}</p>
           )}
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="absolute top-1/2 transform -translate-y-1/2 left-2 text-white opacity-50"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
+          <User className="absolute top-1/2 transform -translate-y-1/2 left-2 text-white opacity-50" />
+
           <div className="absolute left-9 top-1/2 transform -translate-y-1/2 h-8 border-l border-gray-400 opacity-50"></div>
         </div>
         <div className="relative w-full">
@@ -99,21 +80,7 @@ export const SignIn = () => {
             <p className="text-red-600 text-sm">{errors.password.message}</p>
           )}
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="absolute top-1/2 transform -translate-y-1/2 left-2 text-white opacity-50"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
+          <Lock className="absolute top-1/2 transform -translate-y-1/2 left-2 text-white opacity-50" />
           <div className="absolute left-9 top-1/2 transform -translate-y-1/2 h-8 border-l border-gray-400 opacity-50"></div>
         </div>
 
