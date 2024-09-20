@@ -7,6 +7,14 @@ interface RegisterInputs {
     password: string;
     confirmPassword: string;
   }
+  interface LoginInputs {
+    email: string;
+    password: string;
+  }
+  
+  export interface Response {
+    token: string;
+  }
 
 
 export   const fetchRegisterData = async (data: RegisterInputs) => {
@@ -20,15 +28,6 @@ export   const fetchRegisterData = async (data: RegisterInputs) => {
 
 
 
-  interface LoginInputs {
-    email: string;
-    password: string;
-  }
-  
-  export interface Response {
-    token: string;
-  }
-  
   
     export const fetchLoginData = async (data: LoginInputs) => {
         try {

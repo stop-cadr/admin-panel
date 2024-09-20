@@ -40,11 +40,7 @@ export const Content = () => {
             <p>Сортировать</p>
             <div className="flex items-center justify-around border rounded-md p-2">
               <p>По дате добавления заявки</p>
-              <img
-                className="cursor-pointer"
-                src="./image/Polygon 5.png"
-                alt="arrow"
-              />
+              <select className="cursor-pointer "></select>
             </div>
           </div>
           <div className="flex items-center flex-1">

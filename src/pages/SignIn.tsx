@@ -80,8 +80,8 @@ export const SignIn = () => {
             <p className="text-red-600 text-sm">{errors.password.message}</p>
           )}
 
-          <Lock className="absolute top-1/2 transform -translate-y-1/2 left-2 text-white opacity-50" />
-          <div className="absolute left-9 top-1/2 transform -translate-y-1/2 h-8 border-l border-gray-400 opacity-50"></div>
+          <Lock className="absolute top-6 transform -translate-y-1/2 left-2 text-white opacity-50" />
+          <div className="absolute left-9 top-6 transform -translate-y-1/2 h-8 border-l border-gray-400 opacity-50"></div>
         </div>
 
         <button className="bg-amber-400 w-[280px]  h-11 rounded-md text-white cursor-pointer">
