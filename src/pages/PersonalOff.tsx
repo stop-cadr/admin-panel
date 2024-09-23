@@ -73,11 +73,11 @@ export const PersonalOff = () => {
         <div>
           <div className="flex flex-col gap-6">
             <p>Пароль</p>
-            <div className="flex flex-col items-center relative max-w-[465px]">
-              <button
-                onClick={togglePassword}
-                className="pl-[12px] border border-gray-300 rounded-md w-full max-w-[465px] h-10 text-left font-light"
-              >
+            <div
+              onClick={togglePassword}
+              className="flex flex-col items-center relative max-w-[465px]"
+            >
+              <button className="pl-[12px] border border-gray-300 rounded-md w-full max-w-[465px] h-10 text-left font-light">
                 Сменить пароль
               </button>
 

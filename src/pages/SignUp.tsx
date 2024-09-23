@@ -1,8 +1,9 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { fetchRegisterData } from "@/services";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/components/store";
 
-interface Inputs {
+interface InputsUp {
   email: string;
   name: string;
   number: number;
@@ -11,6 +12,7 @@ interface Inputs {
 }
 
 export const SignUp = () => {
+  const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -18,16 +20,17 @@ export const SignUp = () => {
     reset,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({ mode: "onBlur" });
+  } = useForm<InputsUp>({ mode: "onBlur" });
 
   const password = watch("password");
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<InputsUp> = async (data) => {
     if (data.password !== data.confirmPassword) {
       return;
     }
     try {
       await fetchRegisterData(data);
+      setUser({ email: data.email, name: data.name, password: data.password });
       navigate("/sign-in");
     } catch (error) {
       console.log(error);
@@ -79,14 +82,19 @@ export const SignUp = () => {
           <div className="w-full">
             <input
               className="w-full border bg-[#1A1919] rounded-md h-12 p-2 opacity-30 text-white pl-3"
-              type="number"
               placeholder="Ваш телефон"
               {...register("number", {
-                required: true,
+                required: "Введите номер телефона!",
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: "Номер телефона должен содержать только цифры",
+                },
               })}
             />
             {errors?.number && (
-              <p className="text-red-600 text-[13px]">Введите номер!</p>
+              <p className="text-red-600 text-[13px]">
+                {errors.number.message}
+              </p>
             )}
           </div>
 
