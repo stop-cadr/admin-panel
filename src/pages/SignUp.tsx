@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { fetchRegisterData } from "@/services";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/components/store";
+import { useAuthStore } from "@/store";
 
 interface InputsUp {
   email: string;

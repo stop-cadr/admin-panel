@@ -2,7 +2,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { fetchLoginData } from "@/services";
 import { Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/components/store";
 
 interface Inputs {
   email: string;
@@ -10,7 +9,6 @@ interface Inputs {
 }
 
 export const SignIn = () => {
-  const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -30,7 +28,6 @@ export const SignIn = () => {
       return;
     }
 
-    setUser({ email: data.email, password: data.password });
     navigate("/");
     reset();
   };
