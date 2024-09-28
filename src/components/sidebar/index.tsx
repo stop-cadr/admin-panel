@@ -1,6 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export const Sidebar = () => {
+  const nav = useNavigate();
   return (
     <section className="flex flex-col h-full max-w-full">
       <div className="flex justify-between items-center mb-4">
@@ -16,7 +17,9 @@ export const Sidebar = () => {
           </div>
         </div>
         <div>
-          <img className="cursor-pointer" src="./image/e.png" alt="exit" />
+          <button onClick={() => nav("/sign-up")}>
+            <img className="cursor-pointer" src="./image/e.png" alt="exit" />
+          </button>
         </div>
       </div>
       <div className="text-white flex flex-col mt-64 gap-5">

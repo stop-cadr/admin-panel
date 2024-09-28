@@ -1,18 +1,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { fetchRegisterData } from "@/services";
+import { RegisterInputs } from "@/services";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store";
 
-interface InputsUp {
-  email: string;
-  name: string;
-  number: number;
-  password: string;
-  confirmPassword: string;
-}
-
 export const SignUp = () => {
-  const setUser = useAuthStore((state) => state.setUser);
+  const registerUser = useAuthStore((state) => state.register);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -20,22 +12,22 @@ export const SignUp = () => {
     reset,
     watch,
     formState: { errors },
-  } = useForm<InputsUp>({ mode: "onBlur" });
+  } = useForm<RegisterInputs>({ mode: "onBlur" });
 
   const password = watch("password");
 
-  const onSubmit: SubmitHandler<InputsUp> = async (data) => {
+  const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
     if (data.password !== data.confirmPassword) {
       return;
     }
     try {
-      await fetchRegisterData(data);
-      setUser({ email: data.email, name: data.name, password: data.password });
-      navigate("/sign-in");
+      await registerUser(data);
     } catch (error) {
-      console.log(error);
+      console.log("Ошибка при регистрации", error);
+    } finally {
+      reset();
+      navigate("/sign-in");
     }
-    reset();
   };
 
   return (
