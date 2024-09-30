@@ -1,11 +1,13 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { LoginInputs} from "@/services";
+import { LoginInputs } from "@/services";
 import { Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store";
+import { useEffect } from "react";
 
 export const SignIn = () => {
-  const loginUser = useAuthStore((state) => state.login);
+  const { login: loginUser, isAuthenticated } = useAuthStore();
+
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -18,10 +20,9 @@ export const SignIn = () => {
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     try {
       await loginUser(data);
-      navigate("/");
     } catch (error) {
-        console.error('Ошибка при авторизации', error);
-        
+      console.error("Ошибка при авторизации", error);
+
       setError("password", {
         type: "manual",
         message: "Неверный пароль или email",
@@ -30,6 +31,12 @@ export const SignIn = () => {
       reset();
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="bg-[#1A1919]  min-h-screen justify-center items-center flex flex-col gap-3">

@@ -1,7 +1,14 @@
+import { useAuthStore } from "@/store";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export const Sidebar = () => {
+  const { logout } = useAuthStore();
   const nav = useNavigate();
+
+  const handleClick = () => {
+    logout();
+    nav("/sign-in");
+  };
   return (
     <section className="flex flex-col h-full max-w-full">
       <div className="flex justify-between items-center mb-4">
@@ -17,7 +24,11 @@ export const Sidebar = () => {
           </div>
         </div>
         <div>
-          <button onClick={() => nav("/sign-up")}>
+          <button
+            onClick={() => {
+              handleClick();
+            }}
+          >
             <img className="cursor-pointer" src="./image/e.png" alt="exit" />
           </button>
         </div>

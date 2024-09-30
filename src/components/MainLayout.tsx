@@ -1,12 +1,23 @@
 import { Sidebar } from "@/components";
-import { Navigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "@/store";
+import { useEffect } from "react";
 
 export const MainLayout = () => {
-  const { isAuthenticated } = useAuthStore();
-  if (!isAuthenticated) {
-    return <Navigate to="/sign-in" />;
-  }
+  const navigate = useNavigate();
+
+  const { isAuthenticated, getMe } = useAuthStore();
+
+  useEffect(() => {
+    getMe();
+  }, [getMe]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/sign-in");
+    }
+  }, [isAuthenticated]);
+
   return (
     <div className="bg-[#1A1919] min-h-screen grid grid-cols-[250px_auto] gap-5 h-full w-full p-5">
       <Sidebar />
