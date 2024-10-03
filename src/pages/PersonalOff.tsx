@@ -1,7 +1,16 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { useAuthStore } from "@/store";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 export const PersonalOff = () => {
+  const { user, updateUser, getMe } = useAuthStore();
   const [isActive, setIsActive] = useState(false);
+
+  const [userData, setUserData] = useState({
+    name: user?.name || "",
+    number: user?.number || "",
+    email: user?.email || "",
+  });
+
   const togglePassword = () => setIsActive((prev) => !prev);
 
   const hiddenFileInput = useRef<HTMLInputElement | null>(null);
@@ -18,6 +27,28 @@ export const PersonalOff = () => {
       console.log(`выбран файл: ${fileUploaded.name}`);
     }
   };
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUserData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmitClick = async () => {
+    if (!user) {
+      console.error("Пользователь не найден.");
+      return;
+    }
+    try {
+      await updateUser(user.id, userData);
+      console.log("данные обновлены");
+    } catch (error) {
+      console.error("Ошибка при изменении данных", error);
+    }
+  };
+  useEffect(() => {
+    getMe();
+  }, [getMe]);
+
   return (
     <section className="pt-14">
       <div className="flex gap-5 pl-5 h-[30%]">
@@ -29,7 +60,9 @@ export const PersonalOff = () => {
 
         <div className="flex flex-col gap-5 ">
           <div className="flex flex-col gap-1 ">
-            <p className="text-[12px] font-black">Администратор</p>
+            <p className="text-[12px] font-black">
+              {user ? user.name : "имя не указано"}
+            </p>
             <p className="text-[#B8C1CC] text-[12px]">Личный кабинет</p>
           </div>
           <button
@@ -53,6 +86,9 @@ export const PersonalOff = () => {
           <p>Имя</p>
           <input
             type="text"
+            name="name"
+            value={userData.name}
+            onChange={handleInputChange}
             className=" border border-gray-300 rounded-md p-1 w-[465px] h-10"
           />
         </div>
@@ -60,6 +96,9 @@ export const PersonalOff = () => {
           <p>Номер телефона</p>
           <input
             type="text"
+            name="number"
+            value={userData.number}
+            onChange={handleInputChange}
             className=" border border-gray-300 rounded-md p-1 w-[465px] h-10"
           />
         </div>
@@ -67,17 +106,20 @@ export const PersonalOff = () => {
           <p>E-mail</p>
           <input
             type="text"
+            name="email"
+            value={userData.email}
+            onChange={handleInputChange}
             className=" border border-gray-300 rounded-md p-1 w-[465px] h-10"
           />
         </div>
         <div>
           <div className="flex flex-col gap-6">
             <p>Пароль</p>
-            <div
-              onClick={togglePassword}
-              className="flex flex-col items-center relative max-w-[465px]"
-            >
-              <button className="pl-[12px] border border-gray-300 rounded-md w-full max-w-[465px] h-10 text-left font-light">
+            <div className="flex flex-col items-center relative max-w-[465px]">
+              <button
+                onClick={togglePassword}
+                className="pl-[12px] border border-gray-300 rounded-md w-full max-w-[465px] h-10 text-left font-light"
+              >
                 Сменить пароль
               </button>
 
@@ -102,7 +144,10 @@ export const PersonalOff = () => {
               )}
             </div>
             <div className="flex flex-col">
-              <button className="bg-customBlue mb-32 h-10 w-[465px] text-white rounded-md cursor-pointer ">
+              <button
+                onClick={handleSubmitClick}
+                className="bg-customBlue mb-32 h-10 w-[465px] text-white rounded-md cursor-pointer "
+              >
                 Сохранить
               </button>
             </div>

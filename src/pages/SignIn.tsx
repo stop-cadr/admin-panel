@@ -6,14 +6,14 @@ import { useAuthStore } from "@/store";
 import { useEffect } from "react";
 
 export const SignIn = () => {
-  const { login: loginUser, isAuthenticated } = useAuthStore();
-
+  const { login: loginUser, isAuthenticated, error } = useAuthStore();
   const navigate = useNavigate();
+
   const {
     handleSubmit,
     register,
-    reset,
     setError,
+    reset,
     formState: { errors },
   } = useForm<LoginInputs>();
 
@@ -22,21 +22,23 @@ export const SignIn = () => {
       await loginUser(data);
     } catch (error) {
       console.error("Ошибка при авторизации", error);
-
-      setError("password", {
-        type: "manual",
-        message: "Неверный пароль или email",
-      });
-    } finally {
-      reset();
     }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
+      reset();
     }
-  }, [isAuthenticated]);
+    if (error) {
+      reset();
+      setError("password", {
+        type: "manual",
+        message:
+          error === true ? "Ошибка авторизации" : "Неверный email или пароль",
+      });
+    }
+  }, [isAuthenticated, error, navigate, reset, setError]);
 
   return (
     <div className="bg-[#1A1919]  min-h-screen justify-center items-center flex flex-col gap-3">

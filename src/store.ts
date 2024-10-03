@@ -5,18 +5,20 @@ import {
   RegisterInputs,
   LoginInputs,
   getUserData,
-  User,
+  Usern,
+  updateUserData,
 } from "./services";
 
 interface AuthState {
-  user: User | null;
+  user: Usern | null;
   isAuthenticated: boolean;
   error: string | boolean | null;
-  setUser: (user: User) => void;
+  setUser: (user: Usern) => void;
   register: (data: RegisterInputs) => Promise<void>;
   login: (data: LoginInputs) => Promise<void>;
   logout: () => void;
   getMe: () => Promise<void>;
+  updateUser: (id: string | number, userData: Partial<Usern>) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -68,7 +70,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  login: async (data: LoginInputs) => {
+  login: async (data: LoginInputs): Promise<void> => {
     try {
       set({ error: false });
       const response = await postLoginData(data);
@@ -81,6 +83,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           set({
             user: userData,
             isAuthenticated: true,
+            error: null,
           });
         } else {
           set({ error: "Не удалось получить данные пользователя" });
@@ -97,5 +100,18 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     localStorage.removeItem("token");
     set({ user: null, isAuthenticated: false, error: null });
+  },
+  updateUser: async (id: string | number, userData: Partial<Usern>) => {
+    try {
+      const updatedUser = await updateUserData(id, userData);
+      if (updatedUser) {
+        set((state) => ({
+          ...state,
+          user: { ...state.user, ...updatedUser },
+        }));
+      }
+    } catch (error) {
+      console.error("Ошибка обновления данных пользователя:", error);
+    }
   },
 }));
