@@ -1,8 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { LoginInputs } from "@/services";
+import { LoginInputs } from "@/store/types";
 import { Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store";
+import { useAuthStore } from "@/store/store";
 import { useEffect } from "react";
 
 export const SignIn = () => {
@@ -34,8 +34,7 @@ export const SignIn = () => {
       reset();
       setError("password", {
         type: "manual",
-        message:
-          error === true ? "Ошибка авторизации" : "Неверный email или пароль",
+        message: error ? "Ошибка авторизации" : "Неверный email или пароль",
       });
     }
   }, [isAuthenticated, error, navigate, reset, setError]);

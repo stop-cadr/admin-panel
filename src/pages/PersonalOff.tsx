@@ -1,15 +1,17 @@
-import { useAuthStore } from "@/store";
+import { useAuthStore } from "@/store/store";
+import { Usern } from "@/store/types";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 export const PersonalOff = () => {
-  const { user, updateUser, getMe } = useAuthStore();
+  const { user, updateUser, isLoading } = useAuthStore();
   const [isActive, setIsActive] = useState(false);
+  const [userData, setUserData] = useState<Usern | null>(null);
 
-  const [userData, setUserData] = useState({
-    name: user?.name || "",
-    number: user?.number || "",
-    email: user?.email || "",
-  });
+  useEffect(() => {
+    if (user) {
+      setUserData(user);
+    }
+  }, [user]);
 
   const togglePassword = () => setIsActive((prev) => !prev);
 
@@ -30,24 +32,34 @@ export const PersonalOff = () => {
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUserData((prevData) => ({ ...prevData, [name]: value }));
+    setUserData((prevData) => {
+      if (prevData) {
+        return { ...prevData, [name]: value };
+      }
+      return null;
+    });
   };
 
   const handleSubmitClick = async () => {
-    if (!user) {
+    if (!userData) {
       console.error("Пользователь не найден.");
       return;
     }
     try {
-      await updateUser(user.id, userData);
+      await updateUser(userData.id, userData);
       console.log("данные обновлены");
     } catch (error) {
       console.error("Ошибка при изменении данных", error);
     }
   };
-  useEffect(() => {
-    getMe();
-  }, [getMe]);
+
+  if (isLoading)
+    return (
+      <div className="w-full h-screen flex items-center justify-center text-[40px]">
+        Loading...
+      </div>
+    );
+  if (!userData) return <div>Ошибка</div>;
 
   return (
     <section className="pt-14">

@@ -2,17 +2,17 @@ import { create } from "zustand";
 import {
   postRegisterData,
   postLoginData,
-  RegisterInputs,
-  LoginInputs,
   getUserData,
-  Usern,
   updateUserData,
 } from "./services";
+import type { RegisterInputs, LoginInputs, Usern } from "./types";
 
 interface AuthState {
   user: Usern | null;
   isAuthenticated: boolean;
-  error: string | boolean | null;
+  error: string | null;
+  isLoading: boolean;
+  success: boolean;
   setUser: (user: Usern) => void;
   register: (data: RegisterInputs) => Promise<void>;
   login: (data: LoginInputs) => Promise<void>;
@@ -25,10 +25,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: Boolean(localStorage.getItem("token")),
   error: null,
+  isLoading: false,
+  success: false,
 
   getMe: async () => {
     try {
-      set({ error: null });
+      set({ isLoading: true, error: null });
       const userData = await getUserData();
       if (userData) {
         set({ user: userData, isAuthenticated: true });
@@ -38,9 +40,12 @@ export const useAuthStore = create<AuthState>((set) => ({
           error: "Не удалось получить данные пользователя",
         });
       }
+      set({ isLoading: false });
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);
       set({ isAuthenticated: false, error: (error as Error).message });
+    } finally {
+      set({ isLoading: false, error: null, success: true });
     }
   },
 
@@ -48,22 +53,11 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   register: async (data: RegisterInputs) => {
     try {
-      set({ error: false });
-      const response = await postRegisterData(data);
-      if (response?.token) {
-        localStorage.setItem("token", response.token);
-        set({
-          user: {
-            email: data.email,
-            name: data.name,
-            number: data.number,
-            id: "",
-            password: "",
-            confirmPassword: "",
-          },
-          isAuthenticated: true,
-        });
-      }
+      set({ error: null });
+      await postRegisterData(data);
+      set({
+        isAuthenticated: true,
+      });
     } catch (error) {
       set({ error: (error as Error).message });
       console.error("Ошибка регистрации:", error);
@@ -72,7 +66,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: async (data: LoginInputs): Promise<void> => {
     try {
-      set({ error: false });
+      set({ error: null });
       const response = await postLoginData(data);
       if (response?.token) {
         localStorage.setItem("token", response.token);
