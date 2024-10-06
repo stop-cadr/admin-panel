@@ -101,7 +101,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (updatedUser) {
         set((state) => ({
           ...state,
-          user: { ...state.user, ...updatedUser },
+          user: state.user ? { ...state.user, ...updatedUser } : null,
         }));
       }
     } catch (error) {
