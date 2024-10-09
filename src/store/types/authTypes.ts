@@ -26,5 +26,5 @@ export interface Usern {
   email: string;
   name: string;
   number: string;
-  password?: string;
+  password: string;
 }

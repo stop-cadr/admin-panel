@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { RegisterInputs } from "@/store/types";
+import { RegisterInputs, Usern } from "@/store/types";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/store";
 
@@ -16,12 +16,16 @@ export const SignUp = () => {
 
   const password = watch("password");
 
-  const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
-    if (data.password !== data.confirmPassword) {
-      return;
-    }
+  const onSubmit: SubmitHandler<Omit<Usern, "id">> = async (data) => {
     try {
-      await registerUser(data);
+      const userData: Omit<Usern, "id"> = {
+        email: data.email,
+        name: data.name,
+        number: data.number,
+        password: data.password,
+      };
+      await registerUser(userData);
+      console.log(data);
     } catch (error) {
       console.log("Ошибка при регистрации", error);
     } finally {

@@ -1,8 +1,8 @@
-import { LoginInputs, RegisterInputs, Usern, Response } from "@/store/types";
+import { LoginInputs, Usern, Response } from "@/store/types";
 import axios from "axios";
 
 export const postRegisterData = async (
-  data: RegisterInputs
+  data: Omit<Usern, "id">
 ): Promise<Response> => {
   try {
     const response = await axios.post<Response>(

@@ -5,16 +5,15 @@ import {
   getUserData,
   updateUserData,
 } from "./services";
-import type { RegisterInputs, LoginInputs, Usern } from "./types";
+import type { LoginInputs, Usern } from "./types";
 
 interface AuthState {
   user: Usern | null;
   isAuthenticated: boolean;
   error: string | null;
   isLoading: boolean;
-  success: boolean;
   setUser: (user: Usern) => void;
-  register: (data: RegisterInputs) => Promise<void>;
+  register: (data: Omit<Usern, "id">) => Promise<void>;
   login: (data: LoginInputs) => Promise<void>;
   logout: () => void;
   getMe: () => Promise<void>;
@@ -26,38 +25,38 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: Boolean(localStorage.getItem("token")),
   error: null,
   isLoading: false,
-  success: false,
 
   getMe: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ isLoading: true });
+      set({ error: null });
       const userData = await getUserData();
+      console.log(userData);
       if (userData) {
         set({ user: userData, isAuthenticated: true });
+        set({ isLoading: false });
       } else {
         set({
           isAuthenticated: false,
           error: "Не удалось получить данные пользователя",
         });
+        set({ isLoading: false });
       }
-      set({ isLoading: false });
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);
       set({ isAuthenticated: false, error: (error as Error).message });
     } finally {
-      set({ isLoading: false, error: null, success: true });
+      set({ isLoading: false, error: null });
     }
   },
 
   setUser: (user) => set({ user, isAuthenticated: true, error: null }),
 
-  register: async (data: RegisterInputs) => {
+  register: async (data: Omit<Usern, "id">) => {
     try {
       set({ error: null });
       await postRegisterData(data);
-      set({
-        isAuthenticated: true,
-      });
+      set({ isAuthenticated: true });
     } catch (error) {
       set({ error: (error as Error).message });
       console.error("Ошибка регистрации:", error);
