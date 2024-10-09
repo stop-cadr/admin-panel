@@ -10,7 +10,7 @@ export const MainLayout = () => {
 
   useEffect(() => {
     getMe();
-  });
+  }, [getMe]);
 
   useEffect(() => {
     if (!isAuthenticated) {
