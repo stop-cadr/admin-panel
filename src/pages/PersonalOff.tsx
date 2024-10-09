@@ -8,9 +8,7 @@ export const PersonalOff = () => {
   const [userData, setUserData] = useState<Usern | null>(null);
 
   useEffect(() => {
-    if (user) {
-      setUserData(user);
-    }
+    setUserData(user);
   }, [user]);
 
   const togglePassword = () => setIsActive((prev) => !prev);
@@ -52,14 +50,18 @@ export const PersonalOff = () => {
       console.error("Ошибка при изменении данных", error);
     }
   };
-
   if (isLoading)
     return (
-      <div className="w-full h-screen flex items-center justify-center text-[40px]">
+      <div className="flex w-full h-screen items-center justify-center text-[40px]">
         Loading...
       </div>
     );
-  if (!userData) return <div>Ошибка</div>;
+  if (!userData)
+    return (
+      <div className="flex w-full h-screen items-center justify-center text-[40px] text-red-700">
+        Ошибка
+      </div>
+    );
 
   return (
     <section className="pt-14">
