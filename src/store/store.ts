@@ -4,20 +4,25 @@ import {
   postLoginData,
   getUserData,
   updateUserData,
+  addEployeesData,
+  getEmployeesData,
 } from "./services";
 import type { LoginInputs, Usern } from "./types";
-
+import type { FormData } from "@/pages/employees/types/types";
 interface AuthState {
   user: Usern | null;
   isAuthenticated: boolean;
   error: string | null;
   isLoading: boolean;
-  setUser: (user: Usern) => void;
+  employees: FormData[];
+  status: boolean;
   register: (data: Omit<Usern, "id">) => Promise<void>;
   login: (data: LoginInputs) => Promise<void>;
   logout: () => void;
   getMe: () => Promise<void>;
+  getEmployees: () => Promise<void>;
   updateUser: (id: string | number, userData: Partial<Usern>) => Promise<void>;
+  addEployees: (data: FormData) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -25,22 +30,22 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: Boolean(localStorage.getItem("token")),
   error: null,
   isLoading: false,
+  employees: [],
+  status: false,
 
   getMe: async () => {
     try {
-      set({ isLoading: true });
-      set({ error: null });
+      set({ isLoading: true, error: null });
       const userData = await getUserData();
       console.log(userData);
       if (userData) {
-        set({ user: userData, isAuthenticated: true });
-        set({ isLoading: false });
+        set({ user: userData, isAuthenticated: true, isLoading: false });
       } else {
         set({
           isAuthenticated: false,
           error: "Не удалось получить данные пользователя",
+          isLoading: false,
         });
-        set({ isLoading: false });
       }
     } catch (error) {
       console.error("Ошибка при получении данных пользователя:", error);
@@ -50,7 +55,17 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  setUser: (user) => set({ user, isAuthenticated: true, error: null }),
+  getEmployees: async () => {
+    try {
+      set({ isLoading: true, error: null, status: false });
+      const employeeData = await getEmployeesData();
+      if (employeeData) {
+        set({ employees: employeeData, isLoading: false, status: true });
+      }
+    } catch (error) {
+      console.error("Ошибка при получении данных сотрудниов:", error);
+    }
+  },
 
   register: async (data: Omit<Usern, "id">) => {
     try {
@@ -60,6 +75,17 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error) {
       set({ error: (error as Error).message });
       console.error("Ошибка регистрации:", error);
+    }
+  },
+
+  addEployees: async (data: FormData) => {
+    try {
+      set({ error: null });
+      await addEployeesData(data);
+      set({ isAuthenticated: true });
+    } catch (error) {
+      set({ error: (error as Error).message });
+      console.error("Ошибка, не удалось добавить сотрудника", error);
     }
   },
 
@@ -94,14 +120,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem("token");
     set({ user: null, isAuthenticated: false, error: null });
   },
+
   updateUser: async (id: string | number, userData: Partial<Usern>) => {
     try {
       const updatedUser = await updateUserData(id, userData);
+      console.log(updatedUser);
       if (updatedUser) {
-        set((state) => ({
-          ...state,
-          user: state.user ? { ...state.user, ...updatedUser } : null,
-        }));
+        set({ user: updatedUser, isAuthenticated: true });
       }
     } catch (error) {
       console.error("Ошибка обновления данных пользователя:", error);
