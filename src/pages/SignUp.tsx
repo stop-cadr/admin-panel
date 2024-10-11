@@ -25,9 +25,8 @@ export const SignUp = () => {
         password: data.password,
       };
       await registerUser(userData);
-      console.log(data);
     } catch (error) {
-      console.log("Ошибка при регистрации", error);
+      console.error("Ошибка при регистрации", error);
     } finally {
       reset();
       navigate("/sign-in");

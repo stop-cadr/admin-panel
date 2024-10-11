@@ -2,7 +2,7 @@ export const Users = () => {
   return (
     <div className="relative p-5">
       <div className="flex w-full h-full">
-        <select className="border border-gray-300 rounded-md p-2 w-[40%] h-10">
+        <select className="border border-gray-300 rounded-md p-2 w-[40%] h-10 cursor-pointer">
           <option value="Все пользователи">Все пользователи</option>
           <option value="По дате регистрации (новые)">
             По дате регистрации (новые)
