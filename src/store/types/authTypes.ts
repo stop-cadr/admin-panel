@@ -13,6 +13,12 @@ export interface LoginInputs {
 
 export interface Response {
   token: string;
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    number: string;
+  };
 }
 
 export interface Usern {
@@ -21,5 +27,4 @@ export interface Usern {
   name: string;
   number: string;
   password: string;
-  confirmPassword: string;
 }

@@ -1,8 +1,8 @@
-import { LoginInputs, RegisterInputs, Usern, Response } from "@/store/types";
+import { LoginInputs, Usern, Response } from "@/store/types";
 import axios from "axios";
-
+import { FormData } from "@/pages/employees/types/types";
 export const postRegisterData = async (
-  data: RegisterInputs
+  data: Omit<Usern, "id">
 ): Promise<Response> => {
   try {
     const response = await axios.post<Response>(
@@ -27,6 +27,33 @@ export const postLoginData = async (
     return response.data;
   } catch (error) {
     console.error("Ошибка авторизации:", error);
+    return null;
+  }
+};
+
+export const addEployeesData = async (data: FormData) => {
+  try {
+    const response = await axios.post<FormData>(
+      "https://b846882921d4f43c.mokky.dev/emmployees",
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка, не удалось добавить сотрудника", error);
+
+    return null;
+  }
+};
+
+export const getEmployeesData = async () => {
+  try {
+    const response = await axios.get(
+      "https://b846882921d4f43c.mokky.dev/emmployees"
+    );
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при получении данных сотрудника", error);
     return null;
   }
 };
@@ -60,12 +87,7 @@ export const updateUserData = async (
   try {
     const response = await axios.patch(
       `https://b846882921d4f43c.mokky.dev/users/${id}`,
-      userData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      userData
     );
     return response.data;
   } catch (error) {
