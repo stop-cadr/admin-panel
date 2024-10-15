@@ -16,8 +16,9 @@
       "noFallthroughCasesInSwitch": true,
       "baseUrl": ".",
       "paths": {
-          "@/*": ["src/*"]
-      }
+        "@/*": ["src/*"]
+      },
+      "allowSyntheticDefaultImports": true  
     },
     "include": ["src"]
   }

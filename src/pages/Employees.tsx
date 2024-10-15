@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { Modal } from "./employees/ui/Modal";
 import { List } from "./employees/ui/List";
 import { useAuthStore } from "@/store/store";
+import * as _ from "lodash";
 
 export const Employees: React.FC = () => {
   const { getEmployees, employees } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState("");
+  const [positionFilter, setPositionFilter] = useState("Все сотрудники");
+  const [textFilter, setTextFilter] = useState("");
 
   useEffect(() => {
     getEmployees();
@@ -21,13 +24,27 @@ export const Employees: React.FC = () => {
   };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(event.target.value);
+    setPositionFilter(event.target.value);
   };
 
-  const filteredEmployees = employees.filter((employee) =>
-    filter === "" || filter === "Все сотрудники"
-      ? true
-      : employee.position === filter
+  const handleFilterInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setFilter(value);
+
+    const debouncedSetTextFilter = _.debounce((value: string) => {
+      setTextFilter(value);
+    }, 300);
+
+    debouncedSetTextFilter(value);
+  };
+
+  const filteredEmployees = employees.filter(
+    (employee) =>
+      (positionFilter === "Все сотрудники" ||
+        employee.position === positionFilter) &&
+      (textFilter === "" ||
+        employee.id.toString().includes(textFilter) ||
+        employee.phone.includes(textFilter))
   );
 
   return (
@@ -43,7 +60,7 @@ export const Employees: React.FC = () => {
         <select
           className="border border-gray-300 rounded-md p-2 w-[40%] h-10"
           onChange={handleFilterChange}
-          value={filter}
+          value={positionFilter}
         >
           <option value="Все сотрудники">Все сотрудники</option>
           <option value="Монтажер">Монтажер</option>
@@ -60,6 +77,8 @@ export const Employees: React.FC = () => {
             type="text"
             className="border p-2 rounded-s-lg w-[80%] h-10"
             placeholder="Поиск по номеру ID/номеру телефона"
+            onChange={handleFilterInput}
+            value={filter}
           />
           <button className="bg-customBlue text-white p-2 rounded-e-lg w-[15%] h-10">
             Найти
