@@ -1,10 +1,19 @@
 import { useForm } from "react-hook-form";
 import { FormData } from "../types/types";
 import { useAuthStore } from "@/store/store";
+import { useEffect } from "react";
 
 export const Modal = ({ onClose }: { onClose: () => void }) => {
   const addEmployees = useAuthStore((state) => state.addEployees);
   const { register, handleSubmit, reset } = useForm<FormData>();
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.currentTarget === e.target) {
@@ -48,7 +57,7 @@ export const Modal = ({ onClose }: { onClose: () => void }) => {
               <input
                 type="text"
                 {...register("name")}
-                className="w-full h-full py-2 px-2 text-base"
+                className="w-full h-full py-2 px-2 text-base border-none focus:outline-none"
                 placeholder="Имя сотрудника"
               />
             </div>
@@ -59,7 +68,7 @@ export const Modal = ({ onClose }: { onClose: () => void }) => {
               <input
                 type="text"
                 {...register("phone")}
-                className="w-full h-full py-2 px-2 text-base"
+                className="w-full h-full py-2 px-2 text-base border-none focus:outline-none"
                 placeholder="+7"
               />
             </div>
@@ -70,7 +79,7 @@ export const Modal = ({ onClose }: { onClose: () => void }) => {
               <input
                 type="password"
                 {...register("password")}
-                className="w-full h-full py-2 px-2 text-base"
+                className="w-full h-full ml-1 py-2 px-2 text-base border-none focus:outline-none"
                 placeholder="Пароль"
               />
             </div>
@@ -82,7 +91,7 @@ export const Modal = ({ onClose }: { onClose: () => void }) => {
                 type="text"
                 {...register("date")}
                 placeholder="Дата регистрации"
-                className="w-full h-full py-2 px-2 text-base"
+                className="w-full h-full py-2 px-2 text-base border-none focus:outline-none"
                 maxLength={10}
               />
             </div>
@@ -120,7 +129,7 @@ export const Modal = ({ onClose }: { onClose: () => void }) => {
               <input
                 type="text"
                 {...register("comment")}
-                className="w-full h-full py-5 px-12 "
+                className="w-full h-full py-5 px-12 border-none focus:outline-none"
                 placeholder="Комментарий"
               />
             </div>

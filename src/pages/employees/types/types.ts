@@ -8,3 +8,7 @@ export interface FormData {
   status: boolean;
   id: number;
 }
+
+export interface ListProps {
+  employees: FormData[];
+}

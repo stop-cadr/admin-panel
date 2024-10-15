@@ -5,7 +5,6 @@ import { useEffect } from "react";
 
 export const MainLayout = () => {
   const navigate = useNavigate();
-
   const { isAuthenticated, getMe } = useAuthStore();
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export const MainLayout = () => {
     if (!isAuthenticated) {
       navigate("/sign-in");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="bg-[#1A1919] min-h-screen grid grid-cols-[250px_auto] gap-5 h-full w-full p-5">
