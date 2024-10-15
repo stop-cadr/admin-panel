@@ -4,8 +4,9 @@ import { List } from "./employees/ui/List";
 import { useAuthStore } from "@/store/store";
 
 export const Employees: React.FC = () => {
-  const { getEmployees } = useAuthStore();
+  const { getEmployees, employees } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     getEmployees();
@@ -18,6 +19,17 @@ export const Employees: React.FC = () => {
   const handleClosedModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilter(event.target.value);
+  };
+
+  const filteredEmployees = employees.filter((employee) =>
+    filter === "" || filter === "Все сотрудники"
+      ? true
+      : employee.position === filter
+  );
+
   return (
     <div className="p-4">
       <div className="flex w-full h-full gap-5">
@@ -28,14 +40,19 @@ export const Employees: React.FC = () => {
           Добавить <img src="./image/plus.png" alt="plus" />
         </button>
         {isModalOpen && <Modal onClose={handleClosedModal} />}
-        <select className="border border-gray-300 rounded-md p-2 w-[40%] h-10">
-          <option value="Все пользователи">Все сотрудники</option>
-          <option value="По дате регистрации (новые)">
-            По дате регистрации (новые)
-          </option>
-          <option value="По дате регистрации (старые)се пользователи">
-            По дате регистрации (старые)
-          </option>
+        <select
+          className="border border-gray-300 rounded-md p-2 w-[40%] h-10"
+          onChange={handleFilterChange}
+          value={filter}
+        >
+          <option value="Все сотрудники">Все сотрудники</option>
+          <option value="Монтажер">Монтажер</option>
+          <option value="Администратор">Администратор</option>
+          <option value="Камерамэн">Камерамэн</option>
+          <option value="Фотограф">Фотограф</option>
+          <option value="Лайтрум специалист">Лайтрум специалист</option>
+          <option value="СММ">СММ</option>
+          <option value="Сторонний сотрудник">Сторонний сотрудник</option>
         </select>
 
         <div className="flex items-center w-full justify-end">
@@ -52,7 +69,7 @@ export const Employees: React.FC = () => {
       <hr className="border-t border-gray-300 mt-2" />
       <div className="flex items-center justify-between p-4">
         <div className="flex gap-3">
-          <input className=" cursor-pointer" type="checkbox" />
+          <input className="cursor-pointer" type="checkbox" />
           <p className="text-gray-400 cursor-pointer">
             Выбрать всех сотрудников
           </p>
@@ -60,7 +77,7 @@ export const Employees: React.FC = () => {
         <button className="ml-auto text-customBlue">Удалить</button>
       </div>
       <hr className="border-t border-gray-300" />
-      <List />
+      <List employees={filteredEmployees} />
     </div>
   );
 };
