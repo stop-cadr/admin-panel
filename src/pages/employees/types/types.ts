@@ -1,4 +1,5 @@
 export interface FormData {
+  email: string;
   name: string;
   phone: string;
   password: string;
@@ -8,7 +9,11 @@ export interface FormData {
   status: boolean;
   id: number;
 }
-
 export interface ListProps {
   employees: FormData[];
+  toggleEmployeeSelection: (id: number) => void;
+  selectedEmployeeIds: number[];
+}
+export interface ModalProps {
+  onClose: () => void;
 }
