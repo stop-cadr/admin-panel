@@ -1,6 +1,7 @@
 import { LoginInputs, Usern, Response } from "@/store/types";
 import axios from "axios";
 import { FormData } from "@/pages/employees/types/types";
+
 export const postRegisterData = async (
   data: Omit<Usern, "id">
 ): Promise<Response> => {
@@ -31,7 +32,7 @@ export const postLoginData = async (
   }
 };
 
-export const addEployeesData = async (data: FormData) => {
+export const addEmployeesData = async (data: FormData) => {
   try {
     const response = await axios.post<FormData>(
       "https://b846882921d4f43c.mokky.dev/emmployees",
@@ -44,6 +45,19 @@ export const addEployeesData = async (data: FormData) => {
     return null;
   }
 };
+export const deleteEmployeeData = async (
+  id: string | number
+): Promise<boolean> => {
+  try {
+    const response = await axios.delete(
+      `https://b846882921d4f43c.mokky.dev/emmployees/${id}`
+    );
+    return response.status === 204;
+  } catch (error) {
+    console.error("Ошибка при удалении сотрудника:", error);
+    return false;
+  }
+};
 
 export const getEmployeesData = async () => {
   try {
@@ -54,6 +68,39 @@ export const getEmployeesData = async () => {
     return response.data;
   } catch (error) {
     console.error("Ошибка при получении данных сотрудника", error);
+    return null;
+  }
+};
+
+export const updateEmployeesData = async (
+  id: string | number,
+  data: FormData
+) => {
+  try {
+    const response = await axios.patch(
+      `https://b846882921d4f43c.mokky.dev/emmployees/${id}`,
+      data
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Не удалось изменить данные", error);
+    return null;
+  }
+};
+
+export const updateUserData = async (
+  id: string | number,
+  userData: Partial<Usern>
+): Promise<Usern | null> => {
+  try {
+    const response = await axios.patch(
+      `https://b846882921d4f43c.mokky.dev/users/${id}`,
+      userData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Не удалось изменить данные", error);
     return null;
   }
 };
@@ -76,22 +123,6 @@ export const getUserData = async (): Promise<Usern | null> => {
     return response.data;
   } catch (error) {
     console.error("Ошибка при получении данных пользователя:", error);
-    return null;
-  }
-};
-
-export const updateUserData = async (
-  id: string | number,
-  userData: Partial<Usern>
-): Promise<Usern | null> => {
-  try {
-    const response = await axios.patch(
-      `https://b846882921d4f43c.mokky.dev/users/${id}`,
-      userData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Не удалось изменить данные", error);
     return null;
   }
 };

@@ -3,31 +3,50 @@ import { FormData } from "../types/types";
 import { useAuthStore } from "@/store/store";
 import { useEffect } from "react";
 
-export const Modal = ({ onClose }: { onClose: () => void }) => {
-  const addEmployees = useAuthStore((state) => state.addEployees);
-  const { register, handleSubmit, reset } = useForm<FormData>();
+export const Modal = ({
+  onClose,
+  employee,
+}: {
+  onClose: () => void;
+  employee: FormData | null;
+}) => {
+  const addEmployees = useAuthStore((state) => state.addEmployees);
+  const updateEmployees = useAuthStore((state) => state.updateEmployees);
+  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
+    if (employee) {
+      setValue("name", employee.name);
+      setValue("phone", employee.phone);
+      setValue("password", employee.password);
+      setValue("date", employee.date);
+      setValue("position", employee.position);
+      setValue("comment", employee.comment);
+    } else {
+      reset();
+    }
+
     return () => {
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [employee, reset, setValue]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.currentTarget === e.target) {
       onClose();
     }
   };
+
   const onSubmit = async (data: FormData) => {
-    try {
+    if (employee) {
+      await updateEmployees(employee.id, data);
+    } else {
       await addEmployees(data);
-    } catch (error) {
-      console.error("Ошибка, не удалось добавить сотрудника", error);
-    } finally {
-      reset();
     }
+    reset();
+    onClose();
   };
   return (
     <div
@@ -36,6 +55,10 @@ export const Modal = ({ onClose }: { onClose: () => void }) => {
     >
       <div className="bg-white rounded-lg w-full max-w-lg">
         <div className="flex justify-between items-center">
+          <h2 className="p-5 text-xl opacity-50">
+            {employee ? "Редактировать сотрудника" : "Добавить сотрудника"}
+          </h2>
+
           <h2 className="p-5 text-xl opacity-50">ID</h2>
         </div>
         <hr className="border-t w-full border-gray-300 mt-2" />
