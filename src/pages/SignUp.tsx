@@ -1,10 +1,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { RegisterInputs, Usern } from "@/store/types";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/store";
+import { useAuthStore } from "@/store/authStore";
 
 export const SignUp = () => {
   const registerUser = useAuthStore((state) => state.register);
+  
   const navigate = useNavigate();
   const {
     handleSubmit,

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { FormData } from "../types/types";
-import { useAuthStore } from "@/store/store";
 import { useEffect } from "react";
+import { useEmployeeStore } from "@/store/employeeStore";
 
 export const Modal = ({
   onClose,
@@ -10,8 +10,7 @@ export const Modal = ({
   onClose: () => void;
   employee: FormData | null;
 }) => {
-  const addEmployees = useAuthStore((state) => state.addEmployees);
-  const updateEmployees = useAuthStore((state) => state.updateEmployees);
+  const { addEmployee, updateEmployee } = useEmployeeStore();
   const { register, handleSubmit, reset, setValue } = useForm<FormData>();
 
   useEffect(() => {
@@ -41,9 +40,9 @@ export const Modal = ({
 
   const onSubmit = async (data: FormData) => {
     if (employee) {
-      await updateEmployees(employee.id, data);
+      await updateEmployee(employee.id, data);
     } else {
-      await addEmployees(data);
+      await addEmployee(data);
     }
     reset();
     onClose();

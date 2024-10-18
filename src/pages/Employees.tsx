@@ -1,13 +1,22 @@
 import React, { useEffect } from "react";
 import { Modal } from "./employees/ui/Modal";
 import { List } from "./employees/ui/List";
-import { useAuthStore } from "@/store/store";
+import { useEmployeeStore } from "@/store/employeeStore";
+import { useUIStore } from "@/store/uiStore";
 import * as _ from "lodash";
 
 export const Employees: React.FC = () => {
   const {
     getEmployees,
     employees,
+    selectedEmployeeIds,
+    toggleEmployeeSelection,
+    selectAllEmployees,
+    clearEmployeeSelection,
+    deleteSelectedEmployees,
+  } = useEmployeeStore();
+
+  const {
     setPositionFilter,
     setTextFilter,
     positionFilter,
@@ -15,13 +24,8 @@ export const Employees: React.FC = () => {
     isModalOpen,
     openModal,
     closeModal,
-    selectedEmployee,
-    selectedEmployeeIds,
-    toggleEmployeeSelection,
-    selectAllEmployees,
-    clearEmployeeSelection,
-    deleteSelectedEmployees,
-  } = useAuthStore();
+    selectedEmployee
+  } = useUIStore();
 
   useEffect(() => {
     getEmployees();

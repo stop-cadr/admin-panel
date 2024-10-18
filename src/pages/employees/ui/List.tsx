@@ -1,13 +1,13 @@
 import React from "react";
-import { useAuthStore } from "@/store/store";
 import { ListProps } from "@/pages/employees/";
+import { useUIStore } from "@/store/uiStore";
 
 export const List: React.FC<ListProps> = ({
   employees,
   toggleEmployeeSelection,
   selectedEmployeeIds,
 }) => {
-  const openModal = useAuthStore((state) => state.openModal);
+  const { openModal } = useUIStore();
 
   if (!employees || employees.length === 0) {
     return <div className="text-center py-4">Список сотрудников пуст.</div>;
