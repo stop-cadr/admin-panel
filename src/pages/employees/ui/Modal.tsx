@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { FormData } from "../types/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useEmployeeStore } from "@/store/employeeStore";
+import { Eye } from "lucide-react";
 
 export const Modal = ({
   onClose,
@@ -10,8 +11,16 @@ export const Modal = ({
   onClose: () => void;
   employee: FormData | null;
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const { addEmployee, updateEmployee } = useEmployeeStore();
-  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -78,10 +87,15 @@ export const Modal = ({
               <img src="./image/icon.png" className="pl-5" />
               <input
                 type="text"
-                {...register("name")}
-                className="w-full h-full py-2 px-2 text-base border-none focus:outline-none"
+                className="w-full h-full py-2 px-2 text-base border-none "
                 placeholder="Имя сотрудника"
+                {...register("name", {
+                  required: true,
+                })}
               />
+              {errors.name && (
+                <p className="text-red-600 text-[10px]">Введите имя!</p>
+              )}
             </div>
             <hr className="border-t w-full border-gray-300" />
 
@@ -89,21 +103,50 @@ export const Modal = ({
               <img src="./image/phone.png" className=" pl-5 " />
               <input
                 type="text"
-                {...register("phone")}
-                className="w-full h-full py-2 px-2 text-base border-none focus:outline-none"
+                className="w-full h-full py-2 px-2 text-base border-none "
                 placeholder="+7"
+                {...register("phone", {
+                  required: "Введите номер телефона!",
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: "Номер телефона должен содержать только цифры",
+                  },
+                })}
               />
+              {errors.phone && (
+                <p className="text-red-600 text-[10px] flex-1">
+                  {errors.phone.message}
+                </p>
+              )}
             </div>
             <hr className="border-t w-full border-gray-300" />
 
             <div className="flex items-center gap-2 h-full ">
               <img src="./image/key.png" className="pl-5" />
               <input
-                type="password"
-                {...register("password")}
-                className="w-full h-full ml-1 py-2 px-2 text-base border-none focus:outline-none"
+                type={showPassword ? "text" : "password"}
+                className="w-full h-full ml-1 py-2 px-2 text-base border-none "
                 placeholder="Пароль"
+                {...register("password", {
+                  required: "Введите пароль!",
+                  minLength: {
+                    value: 6,
+                    message: "Пароль должен быть не менее 6 символов!",
+                  },
+                })}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="flex items-center justify-center p-2"
+              >
+                <Eye className="opacity-65 " />
+              </button>
+              {errors?.password && (
+                <p className="text-red-600 text-[10px] flex-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <hr className="border-t w-full border-gray-300" />
 
@@ -111,11 +154,18 @@ export const Modal = ({
               <img src="./image/date.png" className="pl-5" />
               <input
                 type="text"
-                {...register("date")}
                 placeholder="Дата регистрации"
-                className="w-full h-full py-2 px-2 text-base border-none focus:outline-none"
+                className="w-full h-full py-2 px-2 text-base border-none "
                 maxLength={10}
+                {...register("date", {
+                  required: "Введите дату!",
+                })}
               />
+              {errors?.date && (
+                <p className="text-red-600 text-[10px] flex-1">
+                  {errors.date.message}
+                </p>
+              )}
             </div>
             <hr className="border-t w-full border-gray-300" />
 
@@ -125,9 +175,16 @@ export const Modal = ({
               </div>
               <div className="w-full px-3">
                 <select
-                  {...register("position")}
+                  {...register("position", {
+                    required: "Выберите должность!",
+                  })}
                   className="border border-gray-400 rounded-md p-2 w-full"
                 >
+                  {errors.position && (
+                    <p className="text-red-600 text-[8px] flex-1">
+                      {errors.position.message}
+                    </p>
+                  )}
                   <option value="" disabled>
                     Выберите должность
                   </option>
@@ -151,7 +208,7 @@ export const Modal = ({
               <input
                 type="text"
                 {...register("comment")}
-                className="w-full h-full py-5 px-12 border-none focus:outline-none"
+                className="w-full h-full py-5 px-12 border-none "
                 placeholder="Комментарий"
               />
             </div>

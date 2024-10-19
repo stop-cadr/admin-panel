@@ -1,7 +1,6 @@
 export interface FormData {
-  email: string;
   name: string;
-  phone: string;
+  phone: string | string;
   password: string;
   date: string;
   position: string;
@@ -17,3 +16,11 @@ export interface ListProps {
 export interface ModalProps {
   onClose: () => void;
 }
+
+
+export interface PaginationProps {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+    totalEmployees: number;
+  }

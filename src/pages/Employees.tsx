@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
-import { Modal } from "./employees/ui/Modal";
-import { List } from "./employees/ui/List";
+// src/pages/employees/Employees.tsx
+import React, { useEffect, useMemo } from "react";
+import { Modal } from "@/pages/employees/ui/Modal";
+import { List } from "@/pages/employees/ui/List";
+import { Pagination } from "@/pages/employees/ui/Pagination";
 import { useEmployeeStore } from "@/store/employeeStore";
-import { useUIStore } from "@/store/uiStore";
+import { useFilterStore } from "@/store/filterStore";
 import * as _ from "lodash";
+import { usePaginationStore } from "@/store/paginationStore";
 
 export const Employees: React.FC = () => {
   const {
@@ -24,27 +27,30 @@ export const Employees: React.FC = () => {
     isModalOpen,
     openModal,
     closeModal,
-    selectedEmployee
-  } = useUIStore();
+    selectedEmployee,
+  } = useFilterStore();
+
+  const { currentPage, setCurrentPage } = usePaginationStore();
 
   useEffect(() => {
     getEmployees();
   }, [getEmployees]);
 
-  const handleAddClick = () => {
-    openModal(null);
-  };
+  const handleAddClick = () => openModal(null);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPositionFilter(event.target.value);
+    setCurrentPage(1);
   };
 
+  const debouncedSetTextFilter = useMemo(
+    () => _.debounce((value: string) => setTextFilter(value), 300),
+    [setTextFilter]
+  );
+
   const handleFilterInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    const debouncedSetTextFilter = _.debounce((value: string) => {
-      setTextFilter(value);
-    }, 300);
-    debouncedSetTextFilter(value);
+    debouncedSetTextFilter(event.target.value);
+    setCurrentPage(1);
   };
 
   const handleSelectAll = () => {
@@ -55,22 +61,35 @@ export const Employees: React.FC = () => {
     }
   };
 
-  const handleDeleteClick = () => {
-    deleteSelectedEmployees();
-  };
+  const handleDeleteClick = () => deleteSelectedEmployees();
 
-  const filteredEmployees = employees.filter(
-    (employee) =>
-      (positionFilter === "Все сотрудники" ||
-        employee.position === positionFilter) &&
-      (textFilter === "" ||
-        employee.id.toString().includes(textFilter) ||
-        employee.phone.includes(textFilter))
+  const filteredEmployees = useMemo(
+    () =>
+      employees.filter(
+        (employee) =>
+          (positionFilter === "Все сотрудники" ||
+            employee.position === positionFilter) &&
+          (textFilter === "" ||
+            employee.id.toString().includes(textFilter) ||
+            employee.phone.includes(textFilter))
+      ),
+    [employees, positionFilter, textFilter]
+  );
+
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
+  const paginatedEmployees = useMemo(
+    () =>
+      filteredEmployees.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      ),
+    [filteredEmployees, currentPage, itemsPerPage]
   );
 
   return (
     <div className="p-4">
-      <div className="flex w-full h-full gap-5">
+      <div className="flex w-full gap-5 mb-4">
         <button
           onClick={handleAddClick}
           className="flex gap-2 bg-customBlue px-7 py-3 text-white items-center rounded-3xl h-10 cursor-pointer"
@@ -86,8 +105,14 @@ export const Employees: React.FC = () => {
           value={positionFilter}
         >
           <option value="Все сотрудники">Все сотрудники</option>
+          <option value="Монтажер">Монтажер</option>
+          <option value="Администратор">Администратор</option>
+          <option value="Камерамэн">Камерамэн</option>
+          <option value="Фотограф">Фотограф</option>
+          <option value="Лайтрум специалист">Лайтрум специалист</option>
+          <option value="СММ">СММ</option>
+          <option value="Сторонний сотрудник">Сторонний сотрудник</option>
         </select>
-
         <div className="flex items-center w-full justify-end">
           <input
             type="text"
@@ -101,8 +126,7 @@ export const Employees: React.FC = () => {
           </button>
         </div>
       </div>
-      <hr className="border-t border-gray-300 mt-2" />
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex gap-3">
           <input
             className="cursor-pointer"
@@ -122,11 +146,17 @@ export const Employees: React.FC = () => {
           Удалить
         </button>
       </div>
-      <hr className="border-t border-gray-300" />
       <List
-        employees={filteredEmployees}
+        employees={paginatedEmployees}
         toggleEmployeeSelection={toggleEmployeeSelection}
         selectedEmployeeIds={selectedEmployeeIds}
+      />
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalEmployees={filteredEmployees.length}
       />
     </div>
   );

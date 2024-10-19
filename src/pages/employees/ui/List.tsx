@@ -1,13 +1,13 @@
 import React from "react";
 import { ListProps } from "@/pages/employees/";
-import { useUIStore } from "@/store/uiStore";
+import { useFilterStore } from "@/store/filterStore";
 
 export const List: React.FC<ListProps> = ({
   employees,
   toggleEmployeeSelection,
   selectedEmployeeIds,
 }) => {
-  const { openModal } = useUIStore();
+  const { openModal } = useFilterStore();
 
   if (!employees || employees.length === 0) {
     return <div className="text-center py-4">Список сотрудников пуст.</div>;
@@ -27,9 +27,7 @@ export const List: React.FC<ListProps> = ({
             <th className="p-3 text-sm font-medium text-gray-600 border-r">
               Номер телефона
             </th>
-            <th className="p-3 text-sm font-medium text-gray-600 border-r">
-              E-mail
-            </th>
+
             <th className="p-3 text-sm font-medium text-gray-600 border-r">
               Должность
             </th>
@@ -59,9 +57,7 @@ export const List: React.FC<ListProps> = ({
               <td className="p-3 text-sm border-r text-center">
                 {employee.phone}
               </td>
-              <td className="p-3 text-sm border-r text-center">
-                {employee.email}
-              </td>
+
               <td className="p-3 text-sm border-r text-center">
                 {employee.position}
               </td>

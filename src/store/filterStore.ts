@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { FormData } from "@/pages/employees/types/types";
 
-interface UIState {
+interface FilterState {
   isModalOpen: boolean;
   selectedEmployee: FormData | null;
   positionFilter: string;
@@ -14,7 +14,7 @@ interface UIState {
   setFilter: (filter: string) => void;
 }
 
-export const useUIStore = create<UIState>((set) => ({
+export const useFilterStore = create<FilterState>((set) => ({
   isModalOpen: false,
   selectedEmployee: null,
   positionFilter: "Все сотрудники",
