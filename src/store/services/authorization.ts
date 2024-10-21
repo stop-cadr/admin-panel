@@ -64,7 +64,6 @@ export const getEmployeesData = async () => {
     const response = await axios.get(
       "https://b846882921d4f43c.mokky.dev/emmployees"
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Ошибка при получении данных сотрудника", error);
@@ -124,5 +123,41 @@ export const getUserData = async (): Promise<Usern | null> => {
   } catch (error) {
     console.error("Ошибка при получении данных пользователя:", error);
     return null;
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const response = await axios.get(
+      "https://b846882921d4f43c.mokky.dev/users"
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при получении данных пользователя", error);
+    return null;
+  }
+};
+
+export const deleteUserData = async (id: string | number): Promise<boolean> => {
+  try {
+    const response = await axios.delete(
+      `https://b846882921d4f43c.mokky.dev/users/${id}`
+    );
+    return response.status === 204;
+  } catch (error) {
+    console.error("Ошибка при удалении пользователя:", error);
+    return false;
+  }
+};
+
+export const deleteAllUsersData = async (): Promise<boolean> => {
+  try {
+    const response = await axios.delete(
+      "https://b846882921d4f43c.mokky.dev/users"
+    );
+    return response.status === 204;
+  } catch (error) {
+    console.error("Ошибка при удалении всех пользователей:", error);
+    return false;
   }
 };

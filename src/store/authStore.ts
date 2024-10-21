@@ -5,19 +5,7 @@ import {
   postLoginData,
   updateUserData,
 } from "./services";
-import type { LoginInputs, Usern } from "./types";
-
-interface AuthState {
-  user: Usern | null;
-  isAuthenticated: boolean;
-  error: string | null;
-  isLoading: boolean;
-  getMe: () => Promise<void>;
-  register: (data: Omit<Usern, "id">) => Promise<void>;
-  login: (data: LoginInputs) => Promise<void>;
-  logout: () => void;
-  updateUser: (id: string | number, userData: Partial<Usern>) => Promise<void>;
-}
+import { AuthState } from "./types";
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,

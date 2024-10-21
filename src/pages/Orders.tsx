@@ -33,7 +33,30 @@ export const Orders = () => {
           </div>
         </div>
       </section>
-      <div className="">
+      <hr className=" mb-3 border-t border-gray-300" />
+
+      <div className="flex items-center px-6 gap-5">
+        <select className=" cursor-pointer border rounded-md px-5 py-2">
+          <option value="Событие">Событие</option>
+          <option value="Свадьба">Свадьба</option>
+          <option value="День рождение">День рождение</option>
+          <option value="Романтический вечер">Романтический вечер</option>
+          <option value="Другое">Другое</option>
+        </select>
+        <select className=" cursor-pointer border rounded-md px-5 py-2">
+          <option value="1-4 класс">1-4 класс</option>
+          <option value="Группа в детском саду">Группа в детском саду</option>
+          <option value="10-11 класс">10-11 класс</option>
+        </select>
+        <select className=" cursor-pointer border rounded-md  py-2">
+          <option value="Аренда">Аренда</option>
+          <option value="Аренда студии">Аренда студии</option>
+          <option value="Аренда студии + фотограф">
+            Аренда Аренда студии + фотограф
+          </option>
+        </select>
+      </div>
+      <div className="mt-3">
         <hr className="border-t border-gray-300" />
         <div className="flex  p-2 w-full">
           <div className=" flex gap-6 items-center px-5 h-full">

@@ -1,15 +1,15 @@
-import { ListProps } from "@/pages/employees/";
-import { useEmployeeFilterStore } from "@/store/filterStore";
+import { ListProps } from "@/pages/users/types/types";
+import { useUserFilterStore } from "@/store/filterStore";
 
-export const EmployeesList: React.FC<ListProps> = ({
-  employees,
-  toggleEmployeeSelection,
-  selectedEmployeeIds,
+export const UsersList: React.FC<ListProps> = ({
+  users,
+  toggleUserSelection,
+  selectedUserIds,
 }) => {
-  const { openModal } = useEmployeeFilterStore();
+  const { openModal } = useUserFilterStore();
 
-  if (!employees || employees.length === 0) {
-    return <div className="text-center py-4">Список сотрудников пуст.</div>;
+  if (!users || users.length === 0) {
+    return <div className="text-center py-4">Список пользователей пуст.</div>;
   }
 
   return (
@@ -26,9 +26,8 @@ export const EmployeesList: React.FC<ListProps> = ({
             <th className="p-3 text-sm font-medium text-gray-600 border-r">
               Номер телефона
             </th>
-
             <th className="p-3 text-sm font-medium text-gray-600 border-r">
-              Должность
+              Дата регистрации
             </th>
             <th className="p-3 text-sm font-medium text-gray-600 border-r">
               Статус
@@ -39,34 +38,29 @@ export const EmployeesList: React.FC<ListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee) => (
-            <tr key={employee.id} className="border-b hover:bg-gray-50">
+          {users.map((user) => (
+            <tr key={user.id} className="border-b hover:bg-gray-50">
               <td className="p-3 text-sm border-r">
                 <input
                   className="mr-2"
                   type="checkbox"
-                  checked={selectedEmployeeIds.includes(employee.id)}
-                  onChange={() => toggleEmployeeSelection(employee.id)}
+                  checked={selectedUserIds.includes(user.id)}
+                  onChange={() => toggleUserSelection(user.id)}
                 />
-                {employee.id}
+                {user.id}
               </td>
+              <td className="p-3 text-sm border-r text-center">{user.name}</td>
               <td className="p-3 text-sm border-r text-center">
-                {employee.name}
+                {user.number}
               </td>
+              <td className="p-3 text-sm border-r text-center">{user.date}</td>
               <td className="p-3 text-sm border-r text-center">
-                {employee.phone}
-              </td>
-
-              <td className="p-3 text-sm border-r text-center">
-                {employee.position}
-              </td>
-              <td className="p-3 text-sm border-r text-center">
-                {employee.status}
+                {user.status}
               </td>
               <td className="p-3 text-sm text-center">
                 <button
                   className="text-blue-500 hover:underline"
-                  onClick={() => openModal(employee)}
+                  onClick={() => openModal(user)}
                 >
                   Подробнее
                 </button>

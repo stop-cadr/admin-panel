@@ -1,20 +1,7 @@
 import { create } from "zustand";
-import type { FormData } from "@/pages/employees/types/types";
+import { EmployeeFilterState, UserFilterStore } from "./types";
 
-interface FilterState {
-  isModalOpen: boolean;
-  selectedEmployee: FormData | null;
-  positionFilter: string;
-  textFilter: string;
-  filter: string;
-  openModal: (employee: FormData | null) => void;
-  closeModal: () => void;
-  setPositionFilter: (filter: string) => void;
-  setTextFilter: (filter: string) => void;
-  setFilter: (filter: string) => void;
-}
-
-export const useFilterStore = create<FilterState>((set) => ({
+export const useEmployeeFilterStore = create<EmployeeFilterState>((set) => ({
   isModalOpen: false,
   selectedEmployee: null,
   positionFilter: "Все сотрудники",
@@ -28,4 +15,15 @@ export const useFilterStore = create<FilterState>((set) => ({
   setPositionFilter: (filter) => set({ positionFilter: filter }),
   setTextFilter: (filter) => set({ textFilter: filter }),
   setFilter: (filter) => set({ filter }),
+}));
+
+export const useUserFilterStore = create<UserFilterStore>((set) => ({
+  positionFilter: "Все пользователи",
+  textFilter: "",
+  setPositionFilter: (filter) => set({ positionFilter: filter }),
+  setTextFilter: (filter) => set({ textFilter: filter }),
+  isModalOpen: false,
+  openModal: (user) => set({ isModalOpen: true, selectedUser: user }),
+  closeModal: () => set({ isModalOpen: false, selectedUser: null }),
+  selectedUser: null,
 }));

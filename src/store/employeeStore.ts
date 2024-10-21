@@ -5,27 +5,16 @@ import {
   updateEmployeesData,
   deleteEmployeeData,
 } from "./services";
-import type { FormData } from "@/pages/employees/types/types";
-
-interface EmployeeState {
-  employees: FormData[];
-  isLoading: boolean;
-  error: string | null;
-  selectedEmployeeIds: number[];
-  getEmployees: () => Promise<void>;
-  addEmployee: (data: FormData) => Promise<void>;
-  updateEmployee: (id: string | number, formData: FormData) => Promise<void>;
-  deleteSelectedEmployees: () => Promise<void>;
-  toggleEmployeeSelection: (id: number) => void;
-  selectAllEmployees: () => void;
-  clearEmployeeSelection: () => void;
-}
+import { EmployeeState } from "./types/storeTypes";
 
 export const useEmployeeStore = create<EmployeeState>((set) => ({
   employees: [],
   isLoading: true,
   error: null,
   selectedEmployeeIds: [],
+  showPassword: false,
+  toggleShowPassword: () =>
+    set((state) => ({ showPassword: !state.showPassword })),
 
   getEmployees: async () => {
     set({ isLoading: true });

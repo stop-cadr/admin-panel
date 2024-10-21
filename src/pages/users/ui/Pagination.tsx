@@ -1,10 +1,10 @@
-import { PaginationProps } from "@/pages/employees/";
+import { UserPaginationProps } from "../types/types";
 
-export const Pagination: React.FC<PaginationProps> = ({
+export const UserPagination: React.FC<UserPaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
-  totalEmployees,
+  totalUsers,
 }) => {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -23,7 +23,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex justify-between items-center py-4 p-4">
       <span className="text-sm text-gray-600">
-        Всего сотрудников: {totalEmployees}
+        Всего пользователей: {totalUsers}
       </span>
       <div className="flex items-center space-x-1">
         <button
