@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { FormData } from "../types/types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Eye } from "lucide-react";
 
@@ -11,9 +11,8 @@ export const Modal = ({
   onClose: () => void;
   employee: FormData | null;
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const { addEmployee, updateEmployee } = useEmployeeStore();
+  const { addEmployee, updateEmployee, showPassword, toggleShowPassword } =
+    useEmployeeStore();
   const {
     register,
     handleSubmit,
@@ -137,7 +136,7 @@ export const Modal = ({
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={toggleShowPassword}
                 className="flex items-center justify-center p-2"
               >
                 <Eye className="opacity-65 " />

@@ -1,10 +1,10 @@
 // src/pages/employees/Employees.tsx
 import React, { useEffect, useMemo } from "react";
 import { Modal } from "@/pages/employees/ui/Modal";
-import { List } from "@/pages/employees/ui/List";
+import { EmployeesList } from "@/pages/employees/ui/List";
 import { Pagination } from "@/pages/employees/ui/Pagination";
 import { useEmployeeStore } from "@/store/employeeStore";
-import { useFilterStore } from "@/store/filterStore";
+import { useEmployeeFilterStore } from "@/store/filterStore";
 import * as _ from "lodash";
 import { usePaginationStore } from "@/store/paginationStore";
 
@@ -28,7 +28,7 @@ export const Employees: React.FC = () => {
     openModal,
     closeModal,
     selectedEmployee,
-  } = useFilterStore();
+  } = useEmployeeFilterStore();
 
   const { currentPage, setCurrentPage } = usePaginationStore();
 
@@ -88,8 +88,8 @@ export const Employees: React.FC = () => {
   );
 
   return (
-    <div className="p-4">
-      <div className="flex w-full gap-5 mb-4">
+    <div className="">
+      <div className="flex w-full gap-5 mb-4 pt-4 px-4">
         <button
           onClick={handleAddClick}
           className="flex gap-2 bg-customBlue px-7 py-3 text-white items-center rounded-3xl h-10 cursor-pointer"
@@ -126,7 +126,9 @@ export const Employees: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="flex items-center justify-between mb-4">
+      <hr className="border-t border-gray-300" />
+
+      <div className="flex items-center justify-between p-4">
         <div className="flex gap-3">
           <input
             className="cursor-pointer"
@@ -146,7 +148,7 @@ export const Employees: React.FC = () => {
           Удалить
         </button>
       </div>
-      <List
+      <EmployeesList
         employees={paginatedEmployees}
         toggleEmployeeSelection={toggleEmployeeSelection}
         selectedEmployeeIds={selectedEmployeeIds}

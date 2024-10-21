@@ -14,7 +14,7 @@ export interface LoginInputs {
 export interface Response {
   token: string;
   user?: {
-    id: string;
+    id: number;
     email: string;
     name: string;
     number: string;
@@ -22,9 +22,13 @@ export interface Response {
 }
 
 export interface Usern {
-  id: string;
+  id: number;
   email: string;
   name: string;
   number: string;
   password: string;
+  status?: string;
+  position?: string;
+  date?: string;
+  comment?: string;
 }
