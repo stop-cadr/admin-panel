@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/store";
+import { useAuthStore } from "@/store/authStore";
 import { Usern } from "@/store/types";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
